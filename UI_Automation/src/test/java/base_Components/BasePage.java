@@ -17,6 +17,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import utilities.DataInputProvider;
 import utilities.HTMLReporter;
 
@@ -24,7 +25,6 @@ import utilities.HTMLReporter;
 public class BasePage extends WebDriverServiceImpl{
 
 	public String dataSheetName;	
-	public static String businessName ;
 
 	@BeforeSuite
 	public void beforeSuite() {
@@ -47,24 +47,23 @@ public class BasePage extends WebDriverServiceImpl{
 		HTMLReporter.svcTest = test;		
 
 		// settings for launching browser
-		
 
 		// Start browser
 		if(prop.getProperty("browser").equalsIgnoreCase("chrome")) {
-			System.setProperty("webdriver.chrome.driver", "./drivers/chromedriver.exe");
-			System.setProperty("webdriver.chrome.silentOutput", "true");
+			WebDriverManager.chromedriver().setup();
 			webdriver = new ChromeDriver();
 		}
+		
 		else if ((prop.getProperty("browser").equalsIgnoreCase("firefox"))) {
-			System.setProperty("webdriver.gecko.driver", "./drivers/geckodriver.exe");
-			System.setProperty("webdriver.gecko.silentOutput", "true");
+			WebDriverManager.firefoxdriver().setup();
 			webdriver = new FirefoxDriver();
 		}
 		 
 		else if ((prop.getProperty("browser").equalsIgnoreCase("ie"))) {
-			System.setProperty("webdriver.ie.driver", "./drivers/IEDriverServer.exe");
+			WebDriverManager.iedriver().setup();
 			webdriver = new InternetExplorerDriver();
 		}
+		
 		driver = new EventFiringWebDriver(webdriver);
 		driver.register(this);
 		driver.manage().window().maximize();
